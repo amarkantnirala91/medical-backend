@@ -137,8 +137,6 @@ try {
     }
 
     if (data.userRole === "Nutritionist") {
-    console.log("hjghfghfg");
-    
         if (!data.nutritionist) {
             return res.status(400).json({
                 code: ERROR_CODES.INVALID_PARAMS,
