@@ -6,10 +6,214 @@ const { getModel } = require("../../../modelManager");
 const { createToken, removeSensitiveKeys, verifyToken, formatDomain } = require("../services/auth.service");
 const moment = require('moment-timezone');
 const { validatePassword } = require('../services/util');
+const { handleCatchError } = require('../../../utils/error.service');
+const { Sequelize, where } = require('sequelize');
+const User = getModel('User');
+const Client = getModel('Client');
+const Nutritionist = getModel('Nutritionist')
+
+exports.signUp = async (req, res) => {
+let transaction;
+try {
+    const data = req.body;
+    if ( !data.firstName ) {
+        return res.status(405).json({
+            code: ERROR_CODES.INVALID_PARAMS,
+            error: "Please provide firstname"
+        })
+    }
+
+    if ( !data.lastName ) {
+        return res.status(405).json({
+            code: ERROR_CODES.INVALID_PARAMS,
+            error: "Please provide lastName"
+        })
+    }
+
+    if ( !data.userEmail ) {
+        return res.status(405).json({
+            code: ERROR_CODES.INVALID_PARAMS,
+            error: "Please provide userEmail"
+        })
+    }
+
+    if ( !data.userPassword ) {
+        return res.status(405).json({
+            code: ERROR_CODES.INVALID_PARAMS,
+            error: "Please provide userPassword"
+        })
+    }
+
+    if (!data.userRole) {
+        return res.status(405).json({
+            code: ERROR_CODES.INVALID_PARAMS,
+            error: "Please provide a user role"
+        });
+    }
+    
+    const validRoles = ['Client', 'Nutritionist', 'YogaTrainer'];
+    if (!validRoles.includes(data.userRole)) {
+        return res.status(405).json({
+            code: ERROR_CODES.INVALID_PARAMS,
+            error: "Invalid user role. Please choose from 'Client', 'Nutritionist', or 'YogaTrainer'."
+        });
+    }
+
+    transaction = await User.sequelize.transaction();
+    const isUserExist = await User.findOne({ where: { userEmail: data.userEmail } });
+
+    if (isUserExist) {
+        return res.status(409).json({
+            code: ERROR_CODES.ALREADY_PRESENT,
+            error: "User already found"
+        });
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(data.userPassword, salt);
+
+    const doc = {
+        "firstName": data.firstName,
+        "lastName": data.lastName,
+        "userEmail": data.userEmail,
+        "userPassword": hashedPassword,
+        "userRole": data.userRole || null,
+        "phoneNumber": data.phoneNumber || null,
+        "address": data.address || null,
+        "salt": salt
+    };
+
+    let userCreate = await User.create(doc, { transaction });
+    userCreate = userCreate.get({ plain: true });
+    
+    if (data.userRole === "Client") {
+    
+        if (!data.client) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Client data is required"
+            });
+        }
+
+        if (!data.client.gender) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Gender is required for Client"
+            });
+        }
+
+        if (!data.client.age) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Age is required for Client"
+            });
+        }
+
+        if (typeof data.client.age !== 'number' || data.client.age <= 0) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Age must be a positive number"
+            });
+        }
+
+        if (data.client.gender !== "Male" && data.client.gender !== "Female" && data.client.gender !== "Other") {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Gender must be 'Male', 'Female', or 'Other'"
+            });
+        }
+
+        const clientDoc = {
+            userId: userCreate.userId, 
+            bmi: data.client.bmi || null,
+            bloodGroup: data.client.bloodGroup || null,
+            medicalHistory: data.client.medicalHistory || null,
+            allergies: data.client.allergies || null,
+            age: data.client.age || null,
+            gender: data.client.gender || null
+        };
+
+        await Client.create(clientDoc, { transaction });
+    }
+
+    if (data.userRole === "Nutritionist") {
+    console.log("hjghfghfg");
+    
+        if (!data.nutritionist) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "nutritionist data is required"
+            });
+        }
+
+        if (!data.nutritionist.specialization) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Specialization is required for Nutritionist"
+            });
+        }
+
+        if (!data.nutritionist.experienceYears) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "experienceYears is required for Nutritionist"
+            });
+        }
+
+        if (!data.nutritionist.age) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Age is required for Client"
+            });
+        }
+
+        if (typeof data.nutritionist.age !== 'number' || data.client.age <= 0) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Age must be a positive number"
+            });
+        }
+
+        if (data.nutritionist.gender !== "Male" && data.nutritionist.gender !== "Female" && data.nutritionist.gender !== "Other") {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Gender must be 'Male', 'Female', or 'Other'"
+            });
+        }
+
+        const nutritionistDoc = {
+            userId: userCreate.userId, 
+            age: data.nutritionist.age,
+            gender: data.nutritionist.gender,
+            specialization: data.nutritionist.specialization,
+            experienceYears: data.nutritionist.experienceYears
+        };
+
+        await Nutritionist.create(nutritionistDoc, { transaction });
+    }
+    await transaction.commit();
+    
+    const { token, refreshToken } = await createToken({
+        userId: userCreate.id,
+        userRole: userCreate.userRole,
+        userName: userCreate.userName,
+        userEmail: userCreate.userEmail
+    }, data.isLong == true ? '7d' : '1d')
+
+    res.status(200).json({
+        code: ERROR_CODES.SUCCESS,
+        token: token,
+        refreshToken: refreshToken,
+        data: removeSensitiveKeys(userCreate)
+    });    
+
+} catch (error) {
+    return handleCatchError(error, req, res)
+}
+
+}
 exports.signIn = async (req, res) => {
-    try {
-        const User = getModel('User');
-       
+    try {       
         const data = req.body;
         console.log(data);
         
@@ -58,21 +262,8 @@ exports.signIn = async (req, res) => {
             });
         }
 
-        // let perms = await getPermissions(user.userId);
-
-        // let loggedDomain = user.isSuperAdmin ? 'admin' : perms.subdomain;
-
-        // const portalDomain = getPortalLink(req, loggedDomain);
-
-        // user = {
-        //     ...user,
-        //     ...perms,
-        //     subdomain: loggedDomain,
-        //     portalLink: portalDomain
-        // };
-
         const { token, refreshToken } = await createToken({
-            userId: user.id,
+            userId: user.userId,
             userRole: user.userRole,
             userName: user.userName,
             userEmail: user.userEmail
@@ -81,7 +272,7 @@ exports.signIn = async (req, res) => {
         await User.update({
             lastLoginAt: moment().format()
         }, {
-            where: { id: user.id }
+            where: { userId: user.userId }
         })
 
         res.status(200).json({

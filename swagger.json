@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Reckitt Backend",
+        "title": "Medical",
         "version": "1.0.0"
     },
     "servers": [
@@ -29,6 +29,57 @@
         }
     ],
     "paths": {
+        "/api/auth/sign-up": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Sign up",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "firstName": "test",
+                                    "lastName": "user",
+                                    "userEmail": "test.user@example.com",
+                                    "userPassword": "securePassword123",
+                                    "userRole": "Client",
+                                    "phoneNumber": "+1234567890",
+                                    "address": "123 Main St, Springfield",
+                                    "client": {
+                                        "bmi": 22.5,
+                                        "bloodGroup": "O+",
+                                        "medicalHistory": "No significant history",
+                                        "allergies": "None",
+                                        "age": 30,
+                                        "gender": "Male"
+                                      },
+                                      "nutritionist": {
+                                            "specialization": "",
+                                            "experienceYears": 0,
+                                            "age": "",
+                                            "gender": ""
+                                      },
+                                      "yogaTrainer": {
+
+                                      }
+                                  }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
         "/api/auth/sign-in": {
             "post": {
                 "tags": [
@@ -116,36 +167,21 @@
                 }
             }
         },
-        "/api/company/upload": {
-            "post": {
+        "/api/company/users": {
+            "get": {
                 "tags": [
-                    "upload"
+                    "Users"
                 ],
-                "summary": "upload file",
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "assetType": {
-                                        "type": "string",
-                                        "description": "Type of the asset being uploaded",
-                                        "example": "IMAGE/VIDEO/EXTERNAL_VIDEO/OTHER"
-                                    },
-                                    "file": {
-                                        "type": "string",
-                                        "format": "binary",
-                                        "description": "File to be uploaded"
-                                    }
-                                },
-                                "required": [
-                                    "file"
-                                ]
-                            }
-                        }
+                "summary": "Get Users",
+                "parameters": [
+                   {
+                    "name": "include.role",
+                    "in": "query",
+                    "schema": {
+                        "type": "client"
                     }
-                },
+                   }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -156,20 +192,23 @@
                 }
             }
         },
-        "/api/company/category": {
+        "/api/company/appointment": {
             "post": {
                 "tags": [
-                    "Category"
+                    "Appointment"
                 ],
-                "summary": "Add Category",
+                "summary": "Appointment Book",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "categoryName": ""
-                                }
+                                      "clientId": 0,
+                                      "professionalId": 0,
+                                      "appointmentDate": "2024-11-25",
+                                      "appointmentFee": 0
+                                  }
                             }
                         }
                     }
@@ -185,9 +224,9 @@
             },
             "get": {
                 "tags": [
-                    "Category"
+                    "Appointment"
                 ],
-                "summary": "Get Category",
+                "summary": "Appointment fetch",
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -198,130 +237,22 @@
                 }
             }
         },
-        "/api/company/category/{catId}": {
-            "put": {
-                "tags": [
-                    "Category"
-                ],
-                "summary": "Update Category",
-                "parameters": [
-                    {
-                        "name": "catId",
-                        "in": "path",
-                        "schema": {
-                            "type": "number"
-                        },
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "categoryName": ""
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "content": {
-                            "application/json": {}
-                        }
-                    }
-                }
-            }
-        },
-        "/api/company/sub-category": {
-            "post": {
-                "tags": [
-                    "Sub Category"
-                ],
-                "summary": "Add Sub Category",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "subCategoryName": "",
-                                    "categoryId": 0
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "content": {
-                            "application/json": {}
-                        }
-                    }
-                }
-            },
+        "/api/company/appointment/{appointmentId}": {
             "get": {
                 "tags": [
-                    "Sub Category"
+                    "Appointment"
                 ],
-                "summary": "Get Sub Category",
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "content": {
-                            "application/json": {}
-                        }
-                    }
-                }
-            }
-        },
-        "/api/company/sub-category/{subCatId}": {
-            "put": {
-                "tags": [
-                    "Sub Category"
-                ],
-                "summary": "Add Sub Category",
                 "parameters": [
                     {
-                        "name": "subCatId",
+                        "name": "appointmentId",
                         "in": "path",
+                        "required": true,
                         "schema": {
-                            "type": "number"
-                        },
-                        "required": true
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "subCategoryName": "",
-                                    "categoryId": 0
-                                }
-                            }
+                          "type": "number"
                         }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "content": {
-                            "application/json": {}
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Sub Category"
+                      }
                 ],
-                "summary": "Get Sub Category",
+                "summary": "Appointment by Id",
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -331,32 +262,6 @@
                     }
                 }
             }
-        },
-        "/api/company/sub-category/{catId}": {
-            "get": {
-                "tags": [
-                    "Sub Category"
-                ],
-                "summary": "Get Sub Category by category",
-                "parameters": [
-                    {
-                        "name": "catId",
-                        "in": "path",
-                        "schema": {
-                            "type": "number"
-                        },
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "content": {
-                            "application/json": {}
-                        }
-                    }
-                }
-            }
-        }
+        } 
     }
 }

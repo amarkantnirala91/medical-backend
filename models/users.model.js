@@ -1,64 +1,83 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    return sequelize.define('User', {
-        id: {
+    const User = sequelize.define('User', {
+        userId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
             allowNull: false,
         },
-        userRole: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        supplierId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
-        userName: {
+        firstName: {
             type: DataTypes.STRING(100),
-            allowNull: true,
+            allowNull: false,
+        },
+        lastName: {
+            type: DataTypes.STRING(100),
+            allowNull: false,
         },
         userEmail: {
             type: DataTypes.STRING(100),
             allowNull: false,
             unique: true,
         },
-        userMobile: {
-            type: DataTypes.STRING(100),
-            allowNull: true,
-        },
         userPassword: {
             type: DataTypes.TEXT,
             allowNull: false,
         },
+        userRole: {
+            type: DataTypes.ENUM('Client', 'Nutritionist', 'YogaTrainer'),
+            allowNull: false,
+        },
+        phoneNumber: {
+            type: DataTypes.STRING(15),
+            allowNull: true,
+        },
+        address: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
         isActive: {
             type: DataTypes.BOOLEAN,
-            allowNull: true,
-            defaultValue: false, // Default value set to boolean false
+            allowNull: false,
+            defaultValue: true,
+        },
+        salt: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        isFirstLogin: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        },
+        lastLoginAt: {
+            type: DataTypes.DATE
         },
         createdAt: {
             type: DataTypes.DATE,
             allowNull: true,
             defaultValue: DataTypes.NOW,
         },
-        isFirstLogin: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
-        lastLoginAt: {
-            type: DataTypes.DATE,
-            allowNull: true,
-        },
-        salt: {
-            type: DataTypes.STRING,
-            allowNull: false
-        }
     }, {
         tableName: 'users',
         freezeTableName: true,
         timestamps: false,
     });
+
+    User.associations = [
+        {
+            type: 'hasOne',
+            target: 'Client',
+            foreignKey: 'userId',
+            as: 'client', 
+        },
+        {
+            type: 'hasOne',
+            target: 'Nutritionist',
+            foreignKey: 'userId',
+            as: 'nutritionist', 
+        },
+    ];
+    return User
 };
