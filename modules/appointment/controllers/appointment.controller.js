@@ -79,8 +79,12 @@ exports.bookAppointment = async (req,res)=>{
             clientId: data.clientId,
             professionalId: data.professionalId,
             appointmentDate: data.appointmentDate || Date.now(),
-            appointmentFee: data.appointmentFee, 
+            appointmentFee: data.appointmentFee,
+            time: data.time 
         }
+
+        console.log(doc);
+        
 
         const appointmentCreate = await Appointment.create(doc);
         return res.status(200).json({

@@ -46,13 +46,6 @@ module.exports = (sequelize) => {
             sourceKey: 'userId', // Corrected sourceKey to match defined attribute
             foreignKey: 'userId', // Foreign key in the User model
             as: 'user', // Alias for this relationship
-        },
-        {
-            type: 'hasMany',
-            target: 'Appointment', // The target model name
-            sourceKey: 'userId', // Corrected sourceKey to match defined attribute
-            foreignKey: 'professionalId', // Foreign key in the User model
-            as: 'appointments', // Alias for this relationship
         }
     ]
     return YogaTrainer;
