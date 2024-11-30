@@ -42,10 +42,31 @@ module.exports = (sequelize) => {
     Appointment.associations = [
         {
             type: 'hasOne',
-            target: 'User', // The target model name
-            sourceKey: 'clientId', // Corrected sourceKey to match defined attribute
-            foreignKey: 'userId', // Foreign key in the User model
-            as: 'user', // Alias for this relationship
+            target: 'User', 
+            sourceKey: 'clientId', 
+            foreignKey: 'userId', 
+            as: 'user', 
+        },
+        {
+            type: 'hasOne',
+            target: 'Client', 
+            sourceKey: 'clientId', 
+            foreignKey: 'userId', 
+            as: 'client', 
+        },
+        {
+            type: 'hasOne',
+            target: 'Nutritionist', 
+            sourceKey: 'professionalId', 
+            foreignKey: 'userId', 
+            as: 'nutritionist', 
+        },
+        {
+            type: 'hasOne',
+            target: 'YogaTrainer', 
+            sourceKey: 'professionalId', 
+            foreignKey: 'userId', 
+            as: 'yogaTrainer', 
         },
     ];
     return Appointment

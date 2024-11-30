@@ -48,6 +48,7 @@
                                     "userRole": "Client",
                                     "phoneNumber": "+1234567890",
                                     "address": "123 Main St, Springfield",
+                                    "age": 0,
                                     "client": {
                                         "bmi": 22.5,
                                         "bloodGroup": "O+",
@@ -63,7 +64,10 @@
                                             "gender": ""
                                       },
                                       "yogaTrainer": {
-
+                                        "specialization": "",
+                                        "experienceYears": 0,
+                                        "age": "",
+                                        "gender": ""
                                       }
                                   }
                             }
@@ -253,6 +257,111 @@
                       }
                 ],
                 "summary": "Appointment by Id",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/diet-plan/{appointmentId}/{clientId}/{nutritionistId}": {
+            "post": {
+                "tags": [
+                    "dietPlan"
+                ],
+                "parameters": [
+                    {
+                        "name": "appointmentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "name": "clientId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "name": "nutritionistId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                          "type": "number"
+                        }
+                      }
+                ],
+                "summary": "Nutritionist DietPlan",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "planName": "Weight Loss Plan",
+                                    "description": "A comprehensive 30-day weight loss plan focused on balanced nutrition.",
+                                    "duration": 30,
+                                    "planFee": 199.99,
+                                    "totalCalories": 1500,
+                                    "totalGrams": 2000.5,
+                                    "protein": 120.5,
+                                    "carbs": 200.0,
+                                    "fats": 50.0
+                                  }
+                                  
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/diet-plan": {
+            "get": {
+                "tags": [
+                    "dietPlan"
+                ],
+                "parameters": [
+                      {
+                        "name": "filter.nutritionistId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "name": "filter.appointmentId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "name": "filter.clientId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                          "type": "number"
+                        }
+                      }
+                ],
+                "summary": "Nutritionist DietPlan",
                 "responses": {
                     "200": {
                         "description": "Successful response",

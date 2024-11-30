@@ -7,6 +7,7 @@ const { parseQueryStringToObject } = require('../../../utils/util');
 const User = getModel('User');
 const Client = getModel('Client');
 const Nutritionist = getModel('Nutritionist');
+const Appointment = getModel('Appointment');
 
 exports.getAllUser = async (req, res) => {
   try {
@@ -30,7 +31,30 @@ exports.getAllUser = async (req, res) => {
     if (include.role === "nutritionist") {
       whereQuery.include.push({
         model: Nutritionist,
-        as: "nutritionist", 
+        as: "nutritionist",
+        include: [
+          {
+            model: Appointment,
+            as: "appointments",
+            required: false,
+            include: [
+              {
+                model: Client,
+                as: "client",
+                required: false,
+                include: [
+                  {
+                    model: User,
+                    as: "user",
+                    required: false,
+                    attributes: USER_DEFAULT_ATTRIBUTE
+
+                  }
+                ]
+              }
+            ]
+          }
+        ] 
       });
       whereQuery.where["userRole"] = "Nutritionist"
     }

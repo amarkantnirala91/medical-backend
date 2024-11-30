@@ -37,6 +37,10 @@ module.exports = (sequelize) => {
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        age: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
         isActive: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
@@ -77,6 +81,12 @@ module.exports = (sequelize) => {
             target: 'Nutritionist',
             foreignKey: 'userId',
             as: 'nutritionist', 
+        },
+        {
+            type: 'hasOne',
+            target: 'YogaTrainer',
+            foreignKey: 'userId',
+            as: 'yogaTrainer', 
         },
     ];
     return User

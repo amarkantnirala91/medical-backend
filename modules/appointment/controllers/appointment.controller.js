@@ -1,13 +1,14 @@
 const config = require('../../../config/config');
 const { ERROR_CODES, MESSAGES, USER_DEFAULT_ATTRIBUTE } = require("../../../config/constant");
 const { getModel } = require("../../../modelManager");
-const { Sequelize, where } = require('sequelize');
+const { Sequelize, where, Op  } = require('sequelize');
 const { handleCatchError } = require('../../../utils/error.service');
 const { parseQueryStringToObject } = require('../../../utils/util');
 const moment = require('moment-timezone');
 const { isInteger, includes } = require('lodash');
 const User = getModel('User');
 const Client = getModel('Client');
+const Nutritionist = getModel('Client');
 const Appointment = getModel('Appointment');
 
 exports.bookAppointment = async (req,res)=>{
@@ -42,22 +43,36 @@ exports.bookAppointment = async (req,res)=>{
         }
 
         const [findClient, findProfessional] = await Promise.all([
-            User.findOne({where: { userId: data.clientId }}),
-            User.findOne({where: { userId: data.professionalId }})
-        ])
-
+            User.findOne({
+                where: {
+                    userId: data.clientId,
+                    userRole: 'Client',
+                },
+            }),
+            User.findOne({
+                where: {
+                    userId: data.professionalId,
+                    userRole: {
+                        [Op.or]: ['Nutritionist', 'YogaTrainer'],
+                    },
+                },
+            }),
+        ]);
+        
+        // Handle if Client not found
         if (!findClient) {
             return res.status(405).json({
                 code: ERROR_CODES.INVALID_PARAMS,
-                error: "Client not found"
-            })
+                error: "Client not found",
+            });
         }
-
+        
+        // Handle if Professional not found
         if (!findProfessional) {
             return res.status(405).json({
                 code: ERROR_CODES.INVALID_PARAMS,
-                error: "Nutritionist or Yogatrainer not found"
-            })
+                error: "Professional not found (either Nutritionist or YogaTrainer)",
+            });
         }
 
         const doc = {

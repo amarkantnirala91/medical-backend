@@ -5,6 +5,7 @@ module.exports.parseQueryStringToObject = (query) => {
             page: 1,
             search: null,
             include: {},
+            filter: {}
         };
     }
 

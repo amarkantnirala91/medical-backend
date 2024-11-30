@@ -11,7 +11,7 @@ const ERROR_CODES = {
     RESET_PASSWORD: 'RESET_PASSWORD',
 };
 
-const USER_DEFAULT_ATTRIBUTE = ['userId', 'firstName', 'lastName', 'userEmail', 'phoneNumber', "address", "userRole"]
+const USER_DEFAULT_ATTRIBUTE = ['userId', 'firstName', 'lastName', 'userEmail', 'phoneNumber', "address", "userRole", "age"]
 
 module.exports = {
     ERROR_CODES,

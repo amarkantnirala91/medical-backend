@@ -10,7 +10,8 @@ const { handleCatchError } = require('../../../utils/error.service');
 const { Sequelize, where } = require('sequelize');
 const User = getModel('User');
 const Client = getModel('Client');
-const Nutritionist = getModel('Nutritionist')
+const Nutritionist = getModel('Nutritionist');
+const YogaTrainer = getModel('YogaTrainer')
 
 exports.signUp = async (req, res) => {
 let transaction;
@@ -80,7 +81,8 @@ try {
         "userRole": data.userRole || null,
         "phoneNumber": data.phoneNumber || null,
         "address": data.address || null,
-        "salt": salt
+        "salt": salt,
+        "age": data.age || null,
     };
 
     let userCreate = await User.create(doc, { transaction });
@@ -165,7 +167,7 @@ try {
             });
         }
 
-        if (typeof data.nutritionist.age !== 'number' || data.client.age <= 0) {
+        if (typeof data.nutritionist.age !== 'number' || data.nutritionist.age <= 0) {
             return res.status(400).json({
                 code: ERROR_CODES.INVALID_PARAMS,
                 error: "Age must be a positive number"
@@ -189,6 +191,61 @@ try {
 
         await Nutritionist.create(nutritionistDoc, { transaction });
     }
+
+    if (data.userRole === "YogaTrainer") {
+        if (!data.yogaTrainer) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "yogaTrainer data is required"
+            });
+        }
+
+        if (!data.yogaTrainer.specialization) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Specialization is required for yogaTrainer"
+            });
+        }
+
+        if (!data.yogaTrainer.experienceYears) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "experienceYears is required for yogaTrainer"
+            });
+        }
+
+        if (!data.yogaTrainer.age) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Age is required for yogaTrainer"
+            });
+        }
+
+        if (typeof data.yogaTrainer.age !== 'number' || data.yogaTrainer.age <= 0) {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Age must be a positive number"
+            });
+        }
+
+        if (data.yogaTrainer.gender !== "Male" && data.yogaTrainer.gender !== "Female" && data.yogaTrainer.gender !== "Other") {
+            return res.status(400).json({
+                code: ERROR_CODES.INVALID_PARAMS,
+                error: "Gender must be 'Male', 'Female', or 'Other'"
+            });
+        }
+
+        const yogaTrainerDoc = {
+            userId: userCreate.userId, 
+            age: data.nutritionist.age,
+            gender: data.nutritionist.gender,
+            specialization: data.nutritionist.specialization,
+            experienceYears: data.nutritionist.experienceYears
+        };
+
+        await YogaTrainer.create(yogaTrainerDoc, { transaction });
+    }
+
     await transaction.commit();
     
     const { token, refreshToken } = await createToken({
