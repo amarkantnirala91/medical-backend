@@ -14,7 +14,7 @@ const Nutritionist = getModel('Nutritionist');
 const YogaTrainer = getModel('YogaTrainer')
 
 exports.signUp = async (req, res) => {
-let transaction;
+
 try {
     const data = req.body;
     if ( !data.firstName ) {
@@ -59,8 +59,6 @@ try {
             error: "Invalid user role. Please choose from 'Client', 'Nutritionist', or 'YogaTrainer'."
         });
     }
-
-    transaction = await User.sequelize.transaction();
     const isUserExist = await User.findOne({ where: { userEmail: data.userEmail } });
 
     if (isUserExist) {
@@ -86,7 +84,7 @@ try {
         "age": data.age || null,
     };
 
-    let userCreate = await User.create(doc, { transaction });
+    let userCreate = await User.create(doc);
     userCreate = userCreate.get({ plain: true });
     
     if (data.userRole === "Nutritionist") {
@@ -140,7 +138,7 @@ try {
             experienceYears: data.nutritionist.experienceYears
         };
 
-        await Nutritionist.create(nutritionistDoc, { transaction });
+        await Nutritionist.create(nutritionistDoc);
     }
 
     if (data.userRole === "YogaTrainer") {
@@ -194,10 +192,10 @@ try {
             experienceYears: data.nutritionist.experienceYears
         };
 
-        await YogaTrainer.create(yogaTrainerDoc, { transaction });
+        console.log(yogaTrainerDoc);
+        
+        await YogaTrainer.create(yogaTrainerDoc);
     }
-
-    await transaction.commit();
     
     const { token, refreshToken } = await createToken({
         userId: userCreate.id,
