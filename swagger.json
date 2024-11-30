@@ -427,7 +427,108 @@
                     }
                 }
             }
+        },
+        "/api/company/exercise-plan/{appointmentId}/{clientId}/{yogaTrainerId}": {
+            "post": {
+                "tags": [
+                    "Exercise Plan"
+                ],
+                "parameters": [
+                    {
+                        "name": "appointmentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "name": "clientId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "name": "yogaTrainerId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                          "type": "number"
+                        }
+                      }
+                ],
+                "summary": "Exercise plan",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "exerciseId": 1,
+                                    "clientId": 0,
+                                    "exerciseName": "Morning Yoga Routine",
+                                    "description": "A 30-minute morning yoga session focusing on flexibility and breathing.",
+                                    "duration": "30 minutes",
+                                    "frequency": "3 times per week",
+                                    "plan": 100
+                                  }              
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/exercise-plan": {
+            "get": {
+                "tags": [
+                    "Exercise Plan"
+                ],
+                "parameters": [
+                      {
+                        "name": "filter.yogaTrainerId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "name": "filter.appointmentId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "name": "filter.clientId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                          "type": "number"
+                        }
+                      }
+                ],
+                "summary": "Exercise Plan",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
         }
-
     }
 }

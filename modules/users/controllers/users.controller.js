@@ -1,13 +1,14 @@
 const config = require('../../../config/config');
 const { ERROR_CODES, MESSAGES, USER_DEFAULT_ATTRIBUTE } = require("../../../config/constant");
 const { getModel } = require("../../../modelManager");
-const { Sequelize, where } = require('sequelize');
+const { Sequelize, where,Op } = require('sequelize');
 const { handleCatchError } = require('../../../utils/error.service');
 const { parseQueryStringToObject } = require('../../../utils/util');
 const User = getModel('User');
 const Client = getModel('Client');
 const Nutritionist = getModel('Nutritionist');
 const Appointment = getModel('Appointment');
+const YogaTrainer = getModel('YogaTrainer');
 
 exports.getAllUser = async (req, res) => {
   try {
@@ -22,42 +23,70 @@ exports.getAllUser = async (req, res) => {
     // Include related Client model if requested
     if (include.role === "client") {
       whereQuery.include.push({
-        model: Client,
-        as: "client", 
+          model: Client,
+          as: "client",
       });
-      whereQuery.where["userRole"] = "Client"
-    }
-
-    if (include.role === "nutritionist") {
-      whereQuery.include.push({
-        model: Nutritionist,
-        as: "nutritionist",
-        include: [
+      whereQuery.where["userRole"] = "Client";
+  } else {
+      whereQuery.include.push(
           {
-            model: Appointment,
-            as: "appointments",
-            required: false,
-            include: [
-              {
-                model: Client,
-                as: "client",
-                required: false,
-                include: [
+              model: YogaTrainer,
+              as: "yogaTrainer",
+              include: [
                   {
-                    model: User,
-                    as: "user",
-                    required: false,
-                    attributes: USER_DEFAULT_ATTRIBUTE
-
-                  }
-                ]
-              }
-            ]
+                      model: Appointment,
+                      as: "appointments",
+                      required: false,
+                      include: [
+                          {
+                              model: Client,
+                              as: "client",
+                              required: false, // Nested client for appointments
+                              include: [
+                                  {
+                                      model: User,
+                                      as: "user",
+                                      required: false,
+                                      attributes: USER_DEFAULT_ATTRIBUTE,
+                                  },
+                              ],
+                          },
+                      ],
+                  },
+              ],
+          },
+          {
+              model: Nutritionist,
+              as: "nutritionist",
+              include: [
+                  {
+                      model: Appointment,
+                      as: "appointments",
+                      required: false,
+                      include: [
+                          {
+                              model: Client,
+                              as: "client",
+                              required: false, // Nested client for appointments
+                              include: [
+                                  {
+                                      model: User,
+                                      as: "user",
+                                      required: false,
+                                      attributes: USER_DEFAULT_ATTRIBUTE,
+                                  },
+                              ],
+                          },
+                      ],
+                  },
+              ],
           }
-        ] 
-      });
-      whereQuery.where["userRole"] = "Nutritionist"
-    }
+      );
+      whereQuery.where["userRole"] = {
+        [Op.or]: ["Nutritionist", "YogaTrainer"]
+    };
+  }
+  
     const userData = await User.findAll(whereQuery);
 
     // Send response

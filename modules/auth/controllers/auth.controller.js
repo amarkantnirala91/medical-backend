@@ -89,56 +89,6 @@ try {
     let userCreate = await User.create(doc, { transaction });
     userCreate = userCreate.get({ plain: true });
     
-    if (data.userRole === "Client") {
-    
-        if (!data.client) {
-            return res.status(400).json({
-                code: ERROR_CODES.INVALID_PARAMS,
-                error: "Client data is required"
-            });
-        }
-
-        if (!data.client.gender) {
-            return res.status(400).json({
-                code: ERROR_CODES.INVALID_PARAMS,
-                error: "Gender is required for Client"
-            });
-        }
-
-        if (!data.client.age) {
-            return res.status(400).json({
-                code: ERROR_CODES.INVALID_PARAMS,
-                error: "Age is required for Client"
-            });
-        }
-
-        if (typeof data.client.age !== 'number' || data.client.age <= 0) {
-            return res.status(400).json({
-                code: ERROR_CODES.INVALID_PARAMS,
-                error: "Age must be a positive number"
-            });
-        }
-
-        if (data.client.gender !== "Male" && data.client.gender !== "Female" && data.client.gender !== "Other") {
-            return res.status(400).json({
-                code: ERROR_CODES.INVALID_PARAMS,
-                error: "Gender must be 'Male', 'Female', or 'Other'"
-            });
-        }
-
-        const clientDoc = {
-            userId: userCreate.userId, 
-            bmi: data.client.bmi || null,
-            bloodGroup: data.client.bloodGroup || null,
-            medicalHistory: data.client.medicalHistory || null,
-            allergies: data.client.allergies || null,
-            age: data.client.age || null,
-            gender: data.client.gender || null
-        };
-
-        await Client.create(clientDoc, { transaction });
-    }
-
     if (data.userRole === "Nutritionist") {
         if (!data.nutritionist) {
             return res.status(400).json({
