@@ -13,14 +13,18 @@ module.exports = (sequelize) => {
             allowNull: false,
         },
         lastName: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING(50),
             allowNull: false,
         },
         userEmail: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING(50),
             allowNull: false,
-            unique: true,
+            unique: {
+                name: 'unique_user_email',
+                msg: 'This email is already in use.'
+            },
         },
+        
         userPassword: {
             type: DataTypes.TEXT,
             allowNull: false,
@@ -38,9 +42,13 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
         age: {
-            type: DataTypes.TEXT,
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
+        gender: {
+            type: DataTypes.ENUM('Male', 'Female', 'Other'),
+            allowNull: true,
+          },
         isActive: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

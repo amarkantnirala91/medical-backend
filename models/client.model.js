@@ -7,43 +7,78 @@ module.exports = (sequelize) => {
             primaryKey: true,
             autoIncrement: true,
             allowNull: false,
-        },
-        bmi: {
+          },
+          bmi: {
             type: DataTypes.FLOAT,
             allowNull: true,
-        },
-        bloodGroup: {
+          },
+          bloodGroup: {
             type: DataTypes.STRING(10),
             allowNull: true,
-        },
-        medicalHistory: {
+          },
+          medicalHistory: {
             type: DataTypes.TEXT,
             allowNull: true,
-        },
-        allergies: {
+          },
+          medications: {
             type: DataTypes.TEXT,
             allowNull: true,
-        },
-        age: {
+          },
+          surgeries: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+          },
+          height: {
+            type: DataTypes.FLOAT,
+            allowNull: true,
+          },
+          weight: {
+            type: DataTypes.FLOAT,
+            allowNull: true,
+          },
+          physicalActivity: {
+            type: DataTypes.STRING,
+            allowNull: true,
+          },
+          smoking: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+          },
+          drinking: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+          },
+          allergies: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+          },
+          pcod: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+          },
+          diabetes: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+          },
+          bloodPressure: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+          },
+          majorSurgery: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+          },
+          userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
-        },
-        userId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            unique: true, // If 1:1 relationship
+            unique: false,
             references: {
-                model: 'users',
-                key: 'userId',
+              model: 'users',
+              key: 'userId',
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
-        },
-        
-        gender: {
-            type: DataTypes.ENUM('Male', 'Female', 'Other'),
-            allowNull: false,
-        },
+          }
     }, {
         tableName: 'clients',
         freezeTableName: true,

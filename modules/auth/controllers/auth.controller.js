@@ -82,6 +82,7 @@ try {
         "phoneNumber": data.phoneNumber || null,
         "address": data.address || null,
         "salt": salt,
+        "gender": data.gender || null,
         "age": data.age || null,
     };
 
