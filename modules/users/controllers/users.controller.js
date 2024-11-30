@@ -31,55 +31,11 @@ exports.getAllUser = async (req, res) => {
       whereQuery.include.push(
           {
               model: YogaTrainer,
-              as: "yogaTrainer",
-              include: [
-                  {
-                      model: Appointment,
-                      as: "appointments",
-                      required: false,
-                      include: [
-                          {
-                              model: Client,
-                              as: "client",
-                              required: false, // Nested client for appointments
-                              include: [
-                                  {
-                                      model: User,
-                                      as: "user",
-                                      required: false,
-                                      attributes: USER_DEFAULT_ATTRIBUTE,
-                                  },
-                              ],
-                          },
-                      ],
-                  },
-              ],
+              as: "yogaTrainer"
           },
           {
               model: Nutritionist,
-              as: "nutritionist",
-              include: [
-                  {
-                      model: Appointment,
-                      as: "appointments",
-                      required: false,
-                      include: [
-                          {
-                              model: Client,
-                              as: "client",
-                              required: false, // Nested client for appointments
-                              include: [
-                                  {
-                                      model: User,
-                                      as: "user",
-                                      required: false,
-                                      attributes: USER_DEFAULT_ATTRIBUTE,
-                                  },
-                              ],
-                          },
-                      ],
-                  },
-              ],
+              as: "nutritionist"
           }
       );
       whereQuery.where["userRole"] = {

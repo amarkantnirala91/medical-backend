@@ -212,7 +212,8 @@
                                       "professionalId": 0,
                                       "appointmentDate": "2024-11-25",
                                       "appointmentFee": 0,
-                                      "time": ""
+                                      "time": "",
+                                      "professionType" : "YogaTrainer"
                                   }
                             }
                         }
