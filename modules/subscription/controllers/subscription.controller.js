@@ -70,7 +70,10 @@ exports.getSubscriptionPlan = async (req, res)=>{
         
         const whereQuery = {
             include: [
-
+               {
+                model: User,
+                as: "user"
+               }
             ],
             where: {}
           };
@@ -79,8 +82,8 @@ exports.getSubscriptionPlan = async (req, res)=>{
             whereQuery.where["userId"] = filter.userId;
           }
           
-          
-          const data = await Exercise.findAll(whereQuery)
+          const Subscription = getModel('Subscription');
+          const data = await Subscription.findAll(whereQuery)
           return res.status(200).json({
             code: ERROR_CODES.SUCCESS,
             data

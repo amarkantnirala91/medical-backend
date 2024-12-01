@@ -39,6 +39,14 @@ module.exports = (sequelize) => {
         freezeTableName: true,
         timestamps: false,
     });
-
+    Subscription.associations = [
+        {
+            type: 'hasOne',
+            target: 'User', // The target model name
+            sourceKey: 'userId', // Corrected sourceKey to match defined attribute
+            foreignKey: 'userId', // Foreign key in the User model
+            as: 'user', // Alias for this relationship
+        }
+    ]
     return Subscription
 };

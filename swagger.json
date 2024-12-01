@@ -625,6 +625,30 @@
                         }
                     }
                 }
+            },
+            "get": {
+                "tags": [
+                    "Subscription Plan"
+                ],
+                "parameters": [
+                      {
+                        "name": "userId",
+                        "in": "path",
+                        "required": false,
+                        "schema": {
+                          "type": "number"
+                        }
+                      }
+                ],
+                "summary": "Subscription Plan",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
             }
         }
     }
