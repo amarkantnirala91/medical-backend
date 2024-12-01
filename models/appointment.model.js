@@ -72,6 +72,13 @@ module.exports = (sequelize) => {
             foreignKey: 'userId', 
             as: 'nutritionist', 
         },
+        {
+            type: 'hasOne',
+            target: 'User', 
+            sourceKey: 'professionalId', 
+            foreignKey: 'userId', 
+            as: 'doctor', 
+        },
     ];
     return Appointment
 };

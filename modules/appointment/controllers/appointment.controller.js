@@ -117,6 +117,11 @@ exports.getAppointment = async (req,res)=>{
                             attributes: USER_DEFAULT_ATTRIBUTE
                         }
                     ]
+                },
+                {
+                    model: User,
+                    as: "doctor",
+                    required: false
                 }
             ],
             where: {}
