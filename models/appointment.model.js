@@ -24,10 +24,6 @@ module.exports = (sequelize) => {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
-        professionType: {  // Add the new column here
-            type: DataTypes.STRING(20),
-            allowNull: true, // Adjust the allowNull property based on your requirement
-        },
         status: {
             type: DataTypes.ENUM('Pending', 'Confirmed', 'Cancelled'),
             defaultValue: 'Pending',
@@ -68,6 +64,13 @@ module.exports = (sequelize) => {
             sourceKey: 'professionalId', 
             foreignKey: 'userId', 
             as: 'yogaTrainer', 
+        },
+        {
+            type: 'hasOne',
+            target: 'Nutritionist', 
+            sourceKey: 'professionalId', 
+            foreignKey: 'userId', 
+            as: 'nutritionist', 
         },
     ];
     return Appointment

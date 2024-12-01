@@ -9,6 +9,7 @@ const { isInteger, includes } = require('lodash');
 const User = getModel('User');
 const Client = getModel('Client');
 const Nutritionist = getModel('Client');
+const YogaTrainer = getModel('YogaTrainer');
 const Appointment = getModel('Appointment');
 
 exports.bookAppointment = async (req,res)=>{
@@ -99,15 +100,42 @@ exports.bookAppointment = async (req,res)=>{
 
 exports.getAppointment = async (req,res)=>{
     try {
-        const appointments = await Appointment.findAll({
+
+        const { filter = {} } = parseQueryStringToObject(req.query);
+        
+        const whereQuery = {
             include: [
                 {
-                    model: User,
-                    as: "user",
-                    attributes: USER_DEFAULT_ATTRIBUTE
+                    model: Client,
+                    as: 'client',
+                    required: false,
+                    include: [
+                        {
+                            model: User,
+                            as: 'user',
+                            required: false,
+                            attributes: USER_DEFAULT_ATTRIBUTE
+                        }
+                    ]
                 }
-            ]
-        })
+            ],
+            where: {}
+          };
+           
+          if (filter.clientId) {
+            whereQuery.where["clientId"] = filter.clientId;
+          }
+          if (filter.nutritionistId) {
+            whereQuery.where["professionalId"] = filter.nutritionistId;
+          }
+          if (filter.yogaTrainerId) { 
+            whereQuery.where["professionalId"] = filter.yogaTrainerId;
+          }
+          if (filter.appointmentId) { 
+            whereQuery.where["appointmentId"] = filter.appointmentId;
+          }
+
+         const appointments = await Appointment.findAll(whereQuery)
 
         return res.status(200).json({
             code: ERROR_CODES.SUCCESS,

@@ -232,6 +232,40 @@
                 "tags": [
                     "Appointment"
                 ],
+                "parameters": [
+                    {
+                      "name": "filter.nutritionistId",
+                      "in": "query",
+                      "required": false,
+                      "schema": {
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "name": "filter.appointmentId",
+                      "in": "query",
+                      "required": false,
+                      "schema": {
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "name": "filter.clientId",
+                      "in": "query",
+                      "required": false,
+                      "schema": {
+                        "type": "number"
+                      }
+                    },
+                    {
+                        "name": "filter.yogaTrainerId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                          "type": "number"
+                        }
+                      }
+              ],
                 "summary": "Appointment fetch",
                 "responses": {
                     "200": {
