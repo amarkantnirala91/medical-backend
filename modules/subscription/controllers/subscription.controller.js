@@ -70,41 +70,13 @@ exports.getSubscriptionPlan = async (req, res)=>{
         
         const whereQuery = {
             include: [
-                {
-                    model: Client,
-                    as: 'client',
-                    required: false,
-                    include: [
-                        {
-                            model: User,
-                            as: 'user',
-                            required: false,
-                            attributes: USER_DEFAULT_ATTRIBUTE
-                        }
-                    ]
-                },
-                {
-                    model: YogaTrainer,
-                    as: 'yogaTrainer',
-                    required: false,
-                    include: [
-                        {
-                            model: User,
-                            as: 'user',
-                            required: false,
-                            attributes: USER_DEFAULT_ATTRIBUTE
-                        }
-                    ]
-                }
+
             ],
             where: {}
           };
            
-          if (filter.yogaTrainerId) {
-            whereQuery.where["yogaTrainerId"] = filter.yogaTrainerId;
-          }
-          if (filter.clientId) { 
-            whereQuery.where["clientId"] = filter.clientId;
+          if (filter.userId) { 
+            whereQuery.where["userId"] = filter.userId;
           }
           
           

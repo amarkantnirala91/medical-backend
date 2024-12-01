@@ -116,11 +116,8 @@ exports.getExercisePlan = async (req, res)=>{
             where: {}
           };
            
-          if (filter.yogaTrainerId) {
-            whereQuery.where["yogaTrainerId"] = filter.yogaTrainerId;
-          }
-          if (filter.clientId) { 
-            whereQuery.where["clientId"] = filter.clientId;
+          if (filter.appointmentId) { 
+            whereQuery.where["appointmentId"] = filter.appointmentId;
           }
           
           

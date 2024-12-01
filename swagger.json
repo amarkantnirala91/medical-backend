@@ -408,21 +408,14 @@
                 ],
                 "parameters": [
                       {
-                        "name": "filter.nutritionistId",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                          "type": "number"
-                        }
-                      },
-                      {
-                        "name": "filter.clientId",
+                        "name": "filter.appointmentId",
                         "in": "query",
                         "required": false,
                         "schema": {
                           "type": "number"
                         }
                       }
+
                 ],
                 "summary": "Nutritionist DietPlan",
                 "responses": {
@@ -585,15 +578,7 @@
                 ],
                 "parameters": [
                       {
-                        "name": "filter.yogaTrainerId",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                          "type": "number"
-                        }
-                      },
-                      {
-                        "name": "filter.clientId",
+                        "name": "filter.appointmentId",
                         "in": "query",
                         "required": false,
                         "schema": {

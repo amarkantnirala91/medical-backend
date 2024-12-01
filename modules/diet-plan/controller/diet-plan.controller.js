@@ -112,13 +112,9 @@ exports.getDietPlan = async (req, res)=>{
             where: {}
           };
            
-          if (filter.nutritionistId) {
-            whereQuery.where["nutritionistId"] = filter.nutritionistId;
+          if (filter.appointmentId) {
+            whereQuery.where["appointmentId"] = filter.appointmentId;
           }
-          if (filter.clientId) { 
-            whereQuery.where["clientId"] = filter.clientId;
-          }
-          
           
           const data = await DietPlan.findAll(whereQuery)
           return res.status(200).json({
