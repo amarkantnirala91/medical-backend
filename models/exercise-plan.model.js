@@ -16,31 +16,30 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        exerciseName: {
-            type: DataTypes.STRING,
+        appointmentId: {
+            type: DataTypes.INTEGER,
             allowNull: false,
-        },
-        description: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        },
-        duration: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        frequency: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        planFee: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
+        },  
+      morningExercise: {
+        type: DataTypes.JSON, // Storing as JSON to handle array data
+        allowNull: false,
+        defaultValue: [], // Default to an empty array
+      },
+      afternoonExercise: {
+        type: DataTypes.JSON, // Storing as JSON to handle array data
+        allowNull: false,
+        defaultValue: [], // Default to an empty array
+      },
+      eveningExercise: {
+        type: DataTypes.JSON, // Storing as JSON to handle array data
+        allowNull: false,
+        defaultValue: [], // Default to an empty array
+      },
+      nightExercise: {
+        type: DataTypes.JSON, // Storing as JSON to handle array data
+        allowNull: false,
+        defaultValue: [], // Default to an empty array
+      }
     }, {
         tableName: 'Exercises',
         freezeTableName: true,

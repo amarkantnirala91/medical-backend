@@ -529,14 +529,41 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "exerciseId": 1,
-                                    "clientId": 0,
-                                    "exerciseName": "Morning Yoga Routine",
-                                    "description": "A 30-minute morning yoga session focusing on flexibility and breathing.",
-                                    "duration": "30 minutes",
-                                    "frequency": "3 times per week",
-                                    "plan": 100
-                                  }              
+                                    "morningExercise": [
+                                      {
+                                        "exerciseName": "Yoga Pose 1",
+                                        "duration": "30 minutes",
+                                        "frequency": "Daily"
+                                      },
+                                      {
+                                        "exerciseName": "Yoga Pose 2",
+                                        "duration": "20 minutes",
+                                        "frequency": "Alternate Days"
+                                      }
+                                    ],
+                                    "afternoonExercise": [
+                                      {
+                                        "exerciseName": "Yoga Pose 3",
+                                        "duration": "45 minutes",
+                                        "frequency": "Every Alternate Day"
+                                      }
+                                    ],
+                                    "eveningExercise": [
+                                      {
+                                        "exerciseName": "Yoga Pose 4",
+                                        "duration": "30 minutes",
+                                        "frequency": "Daily"
+                                      }
+                                    ],
+                                    "nightExercise": [
+                                      {
+                                        "exerciseName": "Yoga Pose 5",
+                                        "duration": "20 minutes",
+                                        "frequency": "Every Day"
+                                      }
+                                    ]
+                                  }
+                                               
                             }
                         }
                     }
