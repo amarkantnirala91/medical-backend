@@ -186,10 +186,10 @@ try {
 
         const yogaTrainerDoc = {
             userId: userCreate.userId, 
-            age: data.nutritionist.age,
-            gender: data.nutritionist.gender,
-            specialization: data.nutritionist.specialization,
-            experienceYears: data.nutritionist.experienceYears
+            age: data.yogaTrainer.age,
+            gender: data.yogaTrainer.gender,
+            specialization: data.yogaTrainer.specialization,
+            experienceYears: data.yogaTrainer.experienceYears
         };
 
         console.log(yogaTrainerDoc);
