@@ -144,9 +144,9 @@ exports.getExercisePlan = async (req, res)=>{
           };
            
           if (filter.yogaTrainerId) {
-            whereQuery.where["yogaTrainer"] = filter.yogaTrainerId;
+            whereQuery.where["yogaTrainerId"] = filter.yogaTrainerId;
           }
-          if (filter.clientId) {  // Corrected condition
+          if (filter.clientId) { 
             whereQuery.where["clientId"] = filter.clientId;
           }
           

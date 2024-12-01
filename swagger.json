@@ -381,14 +381,6 @@
                         }
                       },
                       {
-                        "name": "filter.appointmentId",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                          "type": "number"
-                        }
-                      },
-                      {
                         "name": "filter.clientId",
                         "in": "query",
                         "required": false,
@@ -539,14 +531,6 @@
                         }
                       },
                       {
-                        "name": "filter.appointmentId",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                          "type": "number"
-                        }
-                      },
-                      {
                         "name": "filter.clientId",
                         "in": "query",
                         "required": false,
@@ -556,6 +540,36 @@
                       }
                 ],
                 "summary": "Exercise Plan",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/subscription": {
+            "post": {
+                "tags": [
+                    "Subscription Plan"
+                ],
+                "summary": "Subscription Plan",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                        "userId": 0,
+                                        "planName": "Premium",
+                                        "duration": ""
+                                  }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful response",

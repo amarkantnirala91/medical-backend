@@ -168,7 +168,7 @@ exports.getDietPlan = async (req, res)=>{
           if (filter.nutritionistId) {
             whereQuery.where["nutritionistId"] = filter.nutritionistId;
           }
-          if (filter.clientId) {  // Corrected condition
+          if (filter.clientId) { 
             whereQuery.where["clientId"] = filter.clientId;
           }
           
