@@ -24,7 +24,7 @@ exports.addExercisePlan = async (req, res) => {
         const [findYoga, findClient, findAppointment] = await Promise.all([
             YogaTrainer.findOne({ where: { userId: yogaTrainerId } }),
             Client.findOne({ where: { userId: clientId } }),
-            Appointment.findOne({ where: { professionalId: yogaTrainerId } })
+            Appointment.findOne({ where: { appointmentId: appointmentId } })
         ]);
 
         if (!findYoga) {
