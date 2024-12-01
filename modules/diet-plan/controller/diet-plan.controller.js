@@ -1,133 +1,80 @@
-const config = require('../../../config/config');
-const { ERROR_CODES, MESSAGES, USER_DEFAULT_ATTRIBUTE } = require("../../../config/constant");
+const { DataTypes } = require('sequelize');
+const { ERROR_CODES, USER_DEFAULT_ATTRIBUTE } = require("../../../config/constant");
 const { getModel } = require("../../../modelManager");
-const { Sequelize, where } = require('sequelize');
 const { handleCatchError } = require('../../../utils/error.service');
+const { isInteger } = require('lodash');
 const { parseQueryStringToObject } = require('../../../utils/util');
-const moment = require('moment-timezone');
-const { isInteger, includes } = require('lodash');
-const User = getModel('User');
+const Nutritionist = getModel('Nutritionist');
 const Client = getModel('Client');
 const Appointment = getModel('Appointment');
-const Nutritionist = getModel('Nutritionist');
-const YogaTrainer = getModel('YogaTrainer');
 const DietPlan = getModel('DietPlan');
+const User = getModel('User');
 
-exports.addDietPlan = async (req, res)=>{
+exports.addDietPlan = async (req, res) => {
     let transaction;
     try {
-        const { nutritionistId, clientId, appointmentId } = req.params
+        const { nutritionistId, clientId, appointmentId } = req.params;
         const data = req.body;
-        if ( !data.planName ) {
-            return res.status(405).json({
-                code: ERROR_CODES.INVALID_PARAMS,
-                error: "Please provide planName"
+        const [findNutrin, findClient, findAppointment] = await Promise.all([
+            Nutritionist.findOne({ where: { userId: nutritionistId } }),
+            Client.findOne({ where: { userId: clientId } }),
+            Appointment.findOne({
+                where: { professionalId: nutritionistId },
+                include: [
+                    { model: Client, as: 'client' },
+                    { model: Nutritionist, as: 'nutritionist' }
+                ]
             })
-        }
-    
-        if ( !data.duration ) {
-            return res.status(405).json({
+        ]);
+
+        // Validate data presence
+        if (!findNutrin) {
+            return res.status(404).json({
                 code: ERROR_CODES.INVALID_PARAMS,
-                error: "Please provide duration"
-            })
+                error: "Nutritionist not found"
+            });
         }
-    
-        if ( !data.planFee ) {
-            return res.status(405).json({
+        if (!findClient) {
+            return res.status(404).json({
                 code: ERROR_CODES.INVALID_PARAMS,
-                error: "Please provide planFee"
-            })
+                error: "Client not found"
+            });
         }
-
-        if ( !data.totalCalories ) {
-            return res.status(405).json({
+        if (!findAppointment) {
+            return res.status(404).json({
                 code: ERROR_CODES.INVALID_PARAMS,
-                error: "Please provide totalCalories"
-            })
+                error: "Appointment not found"
+            });
         }
 
-    const [findNutrin, findClient, findAppointment] = await Promise.all([
-        Nutritionist.findOne({ where: {
-            userId: nutritionistId
-        }}),
-        Client.findOne({ where: {
-            userId: clientId
-        }}),
-        Appointment.findOne({ 
-            where: { professionalId: nutritionistId},
-            include: [
-                {
-                    model: User,
-                    as: 'user'
-                },
-                {
-                    model: Nutritionist,
-                    as: 'nutritionist'
-                },
-                {
-                    model: Client,
-                    as: 'client'
-                }
-            ]
-        })   
-    ])
+        const appointment = findAppointment.get({ plain: true });
+        const doc = {
+            nutritionistId: nutritionistId,
+            clientId: clientId,
+            appointmentId: appointmentId,
+            breakfast: data.breakfast || [],
+            lunch: data.lunch || [], 
+            eveningSnack: data.eveningSnack || [], 
+            dinner: data.dinner || [] 
+        };
+       const[diet, app] = await Promise.all([
+            DietPlan.create(doc),
+            Appointment.update({ status: "Confirmed" }, { where: { appointmentId: appointmentId } })
+        ]);
 
-    if ( !findNutrin ) {
-        return res.status(404).json({
-            code: ERROR_CODES.INVALID_PARAMS,
-            error: "Nutritionist not found"
-        })
-    }
-
-    if ( !findClient ) {
-        return res.status(404).json({
-            code: ERROR_CODES.INVALID_PARAMS,
-            error: "Client not found"
-        })
-    }
-
-    
-    if ( !findAppointment ) {
-        return res.status(404).json({
-            code: ERROR_CODES.INVALID_PARAMS,
-            error: "Appointment not found"
-        })
-    }
-
-const appointment = findAppointment.get({ plain: true })
-const doc = {
-    planName: data.planName,
-    nutritionistId: nutritionistId,
-    clientId: clientId,
-    description: data.description || null,
-    duration: data.duration || null,
-    planFee: data.planFee,
-    totalCalories: data.totalCalories,
-    totalGrams: data.totalGrams || null,
-    protein: data.protein || null,
-    carbs: data.carbs || null,
-    fats: data.fats || null
-}
-
-transaction = await DietPlan.sequelize.transaction();
-await Promise.all([
-    DietPlan.create(doc, { transaction }),
-    Appointment.update({status: "Confirmed"}, { where: { appointmentId: appointmentId }})
-])
-
-await transaction.commit();
-
-return res.status(200).json({
-    code: ERROR_CODES.SUCCESS,
-    message: "DietPlan create successfull"
-})
+        return res.status(200).json({
+            code: ERROR_CODES.SUCCESS,
+            data: diet,
+            message: "DietPlan created successfully"
+        });
     } catch (error) {
         if (transaction) {
-           await transaction.rollback()
+            await transaction.rollback(); // Rollback in case of error
         }
-        return handleCatchError(error, req, res)
+        return handleCatchError(error, req, res); // Handle error
     }
-}
+};
+
 
 exports.getDietPlan = async (req, res)=>{
     try {

@@ -341,16 +341,51 @@
                             "schema": {
                                 "type": "object",
                                 "example": {
-                                    "planName": "Weight Loss Plan",
-                                    "description": "A comprehensive 30-day weight loss plan focused on balanced nutrition.",
-                                    "duration": 30,
-                                    "planFee": 199.99,
-                                    "totalCalories": 1500,
-                                    "totalGrams": 2000.5,
-                                    "protein": 120.5,
-                                    "carbs": 200.0,
-                                    "fats": 50.0
-                                  }
+                                    "breakfast": [
+                                        {
+                                            "food": "Oatmeal",
+                                            "quantity": "200g",
+                                            "calories": 150
+                                        },
+                                        {
+                                            "food": "Boiled Eggs",
+                                            "quantity": "2",
+                                            "calories": 140
+                                        }
+                                    ],
+                                    "lunch": [
+                                        {
+                                            "food": "Grilled Chicken",
+                                            "quantity": "250g",
+                                            "calories": 300
+                                        },
+                                        {
+                                            "food": "Steamed Vegetables",
+                                            "quantity": "150g",
+                                            "calories": 100
+                                        }
+                                    ],
+                                    "eveningSnack": [
+                                        {
+                                            "food": "Apple",
+                                            "quantity": "1 medium",
+                                            "calories": 95
+                                        }
+                                    ],
+                                    "dinner": [
+                                        {
+                                            "food": "Salmon",
+                                            "quantity": "200g",
+                                            "calories": 280
+                                        },
+                                        {
+                                            "food": "Brown Rice",
+                                            "quantity": "150g",
+                                            "calories": 180
+                                        }
+                                    ]
+                                }
+                                
                                   
                             }
                         }

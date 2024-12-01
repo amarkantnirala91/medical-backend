@@ -16,41 +16,29 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        planName: {
-            type: DataTypes.STRING(255),
+        appointmentId: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
-        description: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        },
-        duration: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        planFee: {
-            type: DataTypes.FLOAT,
+        breakfast: {
+            type: DataTypes.JSON,  // Storing as JSON to handle array data
             allowNull: false,
+            defaultValue: [], // Default to an empty array
         },
-        totalCalories: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+        lunch: {
+            type: DataTypes.JSON,  // Storing as JSON to handle array data
+            allowNull: false,
+            defaultValue: [], // Default to an empty array
         },
-        totalGrams: {
-            type: DataTypes.FLOAT,
-            allowNull: true
+        eveningSnack: {
+            type: DataTypes.JSON,  // Storing as JSON to handle array data
+            allowNull: false,
+            defaultValue: [], // Default to an empty array
         },
-        protein: {
-            type: DataTypes.FLOAT,
-            allowNull: true
-        },
-        carbs: {
-            type: DataTypes.FLOAT,
-            allowNull: true
-        },
-        fats: {
-            type: DataTypes.FLOAT,
-            allowNull: true
+        dinner: {
+            type: DataTypes.JSON,  // Storing as JSON to handle array data
+            allowNull: false,
+            defaultValue: [], // Default to an empty array
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -63,22 +51,30 @@ module.exports = (sequelize) => {
         timestamps: false,
     });
 
+    // Associations
     DietPlan.associations = [
         {
             type: 'hasOne',
             target: 'Client',
-            sourceKey: 'clientId', 
+            sourceKey: 'clientId',
             foreignKey: 'userId',
-            as: 'client', 
+            as: 'client',
         },
         {
             type: 'hasOne',
             target: 'Nutritionist',
-            sourceKey: 'nutritionistId', 
+            sourceKey: 'nutritionistId',
             foreignKey: 'userId',
-            as: 'nutritionist', 
+            as: 'nutritionist',
+        },
+        {
+            type: 'hasOne',
+            target: 'Appointment', // Assuming there's an Appointment model
+            sourceKey: 'appointmentId',
+            foreignKey: 'appointmentId', // Update with the correct foreign key if different
+            as: 'appointment',
         }
-    ]
+    ];
 
-    return DietPlan
+    return DietPlan;
 };
