@@ -764,6 +764,30 @@
                         }
                     }
                 }
+            },
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                      {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                          "type": "number"
+                        }
+                      }
+                ],
+                "summary": "User by id ",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
             }
         }
         

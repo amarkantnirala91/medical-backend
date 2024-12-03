@@ -45,7 +45,6 @@ exports.getAllUser = async (req, res) => {
   
     const userData = await User.findAll(whereQuery);
 
-    // Send response
     return res.status(200).json({
       code: ERROR_CODES.SUCCESS,
       data: userData,
@@ -55,14 +54,6 @@ exports.getAllUser = async (req, res) => {
   }
 };
 
-const updateableFields = [
-  'firstName',
-  'lastName',
-  'phoneNumber',
-  'address',
-  'age',
-  'gender'
-];
 
 exports.updateUser = async (req, res) => {
 try {
@@ -103,7 +94,8 @@ try {
     "bloodPressure": data.bloodPressure,
     "majorSurgery": data.majorSurgery
   };
-   
+
+
   await Client.update(clientDoc, { where: { userId: userId }})
 
   return res.status(200).json({
@@ -113,4 +105,29 @@ try {
 } catch (error) {
   return handleCatchError(error, req, res);
 }
+
+};
+
+
+exports.getUserById = async (req, res) => {
+  try {
+    const { userId } = req.params;    
+    const userData = await User.findOne({
+      where: { userRole: "Client", userId: userId },
+      include: [
+        {
+          model: Client,
+          as: "client"
+        }
+      ]
+    });
+    
+
+    return res.status(200).json({
+      code: ERROR_CODES.SUCCESS,
+      data: userData,
+    });
+  } catch (error) {
+    return handleCatchError(error, req, res);
+  }
 };
