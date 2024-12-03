@@ -734,7 +734,22 @@
                                     "phoneNumber": "+1234567890",
                                     "address": "123 Main St",
                                     "age": 0,
-                                    "gender": ""
+                                    "gender": "",
+                                        "bmi": 24777.5,
+                                        "bloodGroup": "O+",
+                                        "medicalHistory": "Asthma, seasonal allergies",
+                                        "medications": "Albuterol, Loratadine",
+                                        "surgeries": "Appendectomy",
+                                        "height": 175.5,
+                                        "weight": 70.2,
+                                        "physicalActivity": "Moderate",
+                                        "smoking": false,
+                                        "drinking": true,
+                                        "allergies": "Peanuts, pollen",
+                                        "pcod": false,
+                                        "diabetes": true,
+                                        "bloodPressure": false,
+                                        "majorSurgery": "Knee replacement in 2018"   
                                   }
                                   
                             }

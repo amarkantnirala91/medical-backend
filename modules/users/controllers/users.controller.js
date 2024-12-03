@@ -68,7 +68,7 @@ exports.updateUser = async (req, res) => {
 try {
   const { userId } = req.params;
   const updates = req.body;
-
+  const data = req.body
   const allowedUpdates = {};
   updateableFields.forEach((field) => {
     if (field in updates) {
@@ -86,6 +86,25 @@ try {
   }
 
   await user.update(allowedUpdates);
+  const clientDoc = {
+    "bmi": data.bmi,
+    "bloodGroup": data.bloodGroup,
+    "medicalHistory": data.medicalHistory,
+    "medications": data.medications,
+    "surgeries": data.surgeries,
+    "height": data.height,
+    "weight": data.weight,
+    "physicalActivity": data.physicalActivity,
+    "smoking": data.smoking,
+    "drinking": data.drinking,
+    "allergies": data.allergies,
+    "pcod": data.pcod,
+    "diabetes": data.diabetes,
+    "bloodPressure": data.bloodPressure,
+    "majorSurgery": data.majorSurgery
+  };
+   
+  await Client.update(clientDoc, { where: { userId: userId }})
 
   return res.status(200).json({
     code: ERROR_CODES.SUCCESS,

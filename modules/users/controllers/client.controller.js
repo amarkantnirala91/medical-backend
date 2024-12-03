@@ -53,9 +53,7 @@ exports.createClient = async (req, res)=>{
 exports.updateClient = async (req, res) => {
     try {
         const { userId } = req.params;
-        const updates = req.body;
-
-        // Check if the user exists and is a client
+        const updates = req.body; 
         const user = await User.findOne({ where: { userId: userId, userRole: 'Client' } });
 
         if (!user) {
