@@ -49,3 +49,41 @@ exports.createClient = async (req, res)=>{
         return handleCatchError(error, req, res) 
     }
 }
+
+exports.updateClient = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const updates = req.body;
+
+        // Check if the user exists and is a client
+        const user = await User.findOne({ where: { userId: userId, userRole: 'Client' } });
+
+        if (!user) {
+            return res.status(404).json({
+                code: ERROR_CODES.NOT_FOUND,
+                message: "Client not found",
+            });
+        }
+
+        // Find the client associated with the userId
+        const client = await Client.findOne({ where: { userId: userId } });
+
+        if (!client) {
+            return res.status(404).json({
+                code: ERROR_CODES.NOT_FOUND,
+                message: "Client record not found",
+            });
+        }
+
+        // Update client record with new data
+        await client.update(updates);
+
+        return res.status(200).json({
+            code: ERROR_CODES.SUCCESS,
+            message: "Client updated successfully",
+            data: client,
+        });
+    } catch (error) {
+        return handleCatchError(error, req, res);
+    }
+};

@@ -54,3 +54,44 @@ exports.getAllUser = async (req, res) => {
     return handleCatchError(error, req, res);
   }
 };
+
+const updateableFields = [
+  'firstName',
+  'lastName',
+  'phoneNumber',
+  'address',
+  'age',
+  'gender'
+];
+
+exports.updateUser = async (req, res) => {
+try {
+  const { userId } = req.params;
+  const updates = req.body;
+
+  const allowedUpdates = {};
+  updateableFields.forEach((field) => {
+    if (field in updates) {
+      allowedUpdates[field] = updates[field];
+    }
+  });
+
+  const user = await User.findByPk(userId);
+
+  if (!user) {
+    return res.status(404).json({
+      code: ERROR_CODES.NOT_FOUND,
+      message: MESSAGES.USER_NOT_FOUND,
+    });
+  }
+
+  await user.update(allowedUpdates);
+
+  return res.status(200).json({
+    code: ERROR_CODES.SUCCESS,
+    data: user,
+  });
+} catch (error) {
+  return handleCatchError(error, req, res);
+}
+};

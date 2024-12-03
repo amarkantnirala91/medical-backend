@@ -484,6 +484,62 @@
                 }
             }
         },
+        "/api/company/client/{userId}": {
+            "put": {
+                "tags": [
+                    "Client"
+                ],
+                "parameters": [
+                      {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                          "type": "number"
+                        }
+                      }
+                ],
+                "summary": "Client Update",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    
+                                        "bmi": 22.5,
+                                        "bloodGroup": "A+",
+                                        "medicalHistory": "History of hypertension and asthma.",
+                                        "medications": "Lisinopril, Salbutamol",
+                                        "surgeries": "Appendectomy in 2015",
+                                        "height": 170.5,
+                                        "weight": 70.5,
+                                        "physicalActivity": "Moderate exercise 3 times a week",
+                                        "smoking": false,
+                                        "drinking": true,
+                                        "allergies": "Peanuts, Penicillin",
+                                        "pcod": false,
+                                        "diabetes": false,
+                                        "bloodPressure": true,
+                                        "majorSurgery": "Knee replacement in 2020"
+                                      
+                                      
+                                  }
+                                  
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
         "/api/company/exercise-plan/{appointmentId}/{clientId}/{yogaTrainerId}": {
             "post": {
                 "tags": [
@@ -650,6 +706,51 @@
                     }
                 }
             }
+        },
+        "/api/company/user/{userId}": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                      {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                          "type": "number"
+                        }
+                      }
+                ],
+                "summary": "User Update",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "firstName": "test",
+                                    "lastName": "test2",
+                                    "phoneNumber": "+1234567890",
+                                    "address": "123 Main St",
+                                    "age": 0,
+                                    "gender": ""
+                                  }
+                                  
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
         }
+        
     }
 }
